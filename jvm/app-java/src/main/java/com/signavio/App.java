@@ -2,6 +2,7 @@
 package com.signavio;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -16,14 +17,20 @@ public class App {
     public static void main(String[] args) throws InterruptedException {
         List<EventlogRow> eventlogRows = CSVReader.readFile("samples/Activity_Log_2004_to_2014.csv");
 
-        long begin = System.currentTimeMillis();
+        List<String> benchmarkResults = new ArrayList<>(100);//to properly make a benchmark
 
-        String queryEventLog = queryEventLog(eventlogRows);
-        System.out.println(queryEventLog);
+        for (int i = 0; i < 100; i++) {
+            long begin = System.currentTimeMillis();
 
-        long end = System.currentTimeMillis();
+            String queryEventLog = queryEventLog(eventlogRows);
+            System.out.println(queryEventLog);
 
-        System.out.println(String.format("Duration: %s milliseconds", end - begin));
+            long end = System.currentTimeMillis();
+
+            benchmarkResults.add(String.format("Duration: %s milliseconds", end - begin));
+        }
+
+        benchmarkResults.forEach(System.out::println);
     }
 
     /**
